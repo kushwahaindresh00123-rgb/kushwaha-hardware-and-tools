@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#07090d">
+<meta name="description" content="Kushwaha Hardware & Tools Service — Kaptanganj, Kushinagar, Uttar Pradesh">
+<title>Kushwaha Hardware & Tools Service</title>
+
+<style>
+:root{
+  --bg:#07090d;--bg2:#0c1118;--card:#101720;--line:rgba(255,255,255,.1);
+  --text:#f7f9fc;--muted:#a7b1bf;--gold:#ffc52b;--orange:#ff7117;
+  --green:#25d366;--cyan:#20d9ff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+body.loading{overflow:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+button{font:inherit}
+::selection{background:var(--gold);color:#07090d}
+
+/* ================= PREMIUM TOOLBOX INTRO ================= */
+.intro{
+ position:fixed;inset:0;z-index:9999;background:#05070a;
+ display:grid;place-items:center;overflow:hidden;
+ transition:opacity 1s ease,visibility 1s ease;
+}
+.intro.done{opacity:0;visibility:hidden;pointer-events:none}
+.intro-bg{
+ position:absolute;inset:0;
+ background:
+ radial-gradient(circle at 50% 55%,rgba(255,197,43,.13),transparent 22%),
+ radial-gradient(circle at 20% 30%,rgba(32,217,255,.06),transparent 24%),
+ linear-gradient(180deg,#05070a,#090d13);
+}
+.intro-grid{
+ position:absolute;inset:-50%;
+ background-image:
+ linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+ background-size:45px 45px;
+ transform:perspective(500px) rotateX(62deg) translateY(16%);
+ animation:gridMove 8s linear infinite;
+}
+.intro-content{position:relative;width:min(680px,94vw);text-align:center;z-index:2}
+.intro-brand{
+ font-size:clamp(20px,4vw,34px);font-weight:950;letter-spacing:4px;
+ opacity:0;animation:fadeUp .8s .2s forwards;
+}
+.intro-brand span{color:var(--gold)}
+.intro-sub{
+ margin-top:7px;color:#8995a5;font-size:10px;letter-spacing:4px;
+ opacity:0;animation:fadeUp .8s .45s forwards;
+}
+
+/* toolbox */
+.toolbox-scene{
+ position:relative;width:min(570px,88vw);height:355px;margin:30px auto 0;
+ perspective:1100px;transform-style:preserve-3d;
+}
+.toolbox{
+ position:absolute;left:50%;top:52%;width:min(470px,82vw);height:205px;
+ transform:translate(-50%,-50%) rotateX(3deg);
+ transform-style:preserve-3d;
+}
+.box-body{
+ position:absolute;left:0;right:0;bottom:0;height:150px;border-radius:16px 16px 22px 22px;
+ background:linear-gradient(145deg,#252d37,#10161e 65%,#080c11);
+ border:2px solid #3c4652;
+ box-shadow:0 30px 70px rgba(0,0,0,.75),inset 0 1px rgba(255,255,255,.16);
+}
+.box-body:before{
+ content:"";position:absolute;left:15px;right:15px;top:13px;height:7px;border-radius:5px;
+ background:linear-gradient(90deg,var(--orange),var(--gold),var(--orange));opacity:.9;
+}
+.box-front{
+ position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);
+ width:170px;height:58px;border-radius:8px;
+ border:1px solid #4d5966;background:#121921;
+ display:grid;place-items:center;color:var(--gold);
+ font-weight:950;letter-spacing:2px;font-size:11px;
+ box-shadow:0 8px 25px rgba(0,0,0,.5);
+}
+.box-handle{
+ position:absolute;left:50%;top:-32px;transform:translateX(-50%);
+ width:190px;height:62px;border:14px solid #5f6b77;border-bottom:0;border-radius:30px 30px 0 0;
+ box-shadow:inset 0 3px 0 rgba(255,255,255,.18);
+}
+.box-lid{
+ position:absolute;left:0;right:0;top:0;height:65px;border-radius:15px 15px 8px 8px;
+ transform-origin:50% 100%;transform:rotateX(0deg);
+ background:linear-gradient(145deg,#343d48,#151b23);
+ border:2px solid #4a5561;
+ box-shadow:0 15px 35px rgba(0,0,0,.6);
+ z-index:4;
+ animation:lidOpen 1.35s 1.05s cubic-bezier(.2,.8,.15,1) forwards;
+}
+.box-lid:after{
+ content:"";position:absolute;left:15px;right:15px;bottom:9px;height:5px;
+ border-radius:5px;background:linear-gradient(90deg,var(--orange),var(--gold));
+}
+.drawer{
+ position:absolute;left:32px;right:32px;height:35px;border-radius:6px;
+ background:linear-gradient(#27313b,#151b22);border:1px solid #49545f;
+ box-shadow:0 6px 15px #000;z-index:2;
+}
+.d1{top:37px;animation:drawer1 .7s 2.05s forwards}
+.d2{top:77px;animation:drawer2 .7s 2.18s forwards}
+.d3{top:117px;animation:drawer3 .7s 2.31s forwards}
+.handle{
+ position:absolute;left:50%;top:11px;transform:translateX(-50%);
+ width:44px;height:7px;border-radius:8px;background:#8a96a2
+}
+.tool-pop{
+ position:absolute;z-index:6;left:50%;bottom:112px;width:220px;height:75px;
+ transform:translate(-50%,40px) scale(.5);opacity:0;
+ animation:toolPop 1s 2.65s cubic-bezier(.16,1.25,.35,1) forwards;
+}
+.pop-wrench{
+ position:absolute;width:200px;height:25px;left:10px;top:25px;border-radius:20px;
+ background:linear-gradient(#f7fafc,#9aa5af,#e7edf2);
+ transform:rotate(-18deg);box-shadow:0 12px 25px #000;
+}
+.pop-wrench:before{
+ content:"";position:absolute;left:-20px;top:-20px;width:52px;height:52px;
+ border:13px solid #d0d7de;border-right-color:transparent;border-radius:50%;
+}
+.pop-wrench:after{
+ content:"";position:absolute;right:-12px;top:-13px;width:50px;height:50px;border-radius:50%;
+ background:#788591;box-shadow:inset 0 0 0 9px #b8c1c8;
+}
+.spark{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 20px var(--gold);opacity:0}
+.sp1{left:10%;top:30%;animation:spark .7s 2.75s 3}.sp2{right:12%;top:24%;animation:spark .7s 2.95s 3}
+.sp3{left:18%;bottom:22%;animation:spark .7s 3.1s 3}.sp4{right:18%;bottom:20%;animation:spark .7s 3.25s 3}
+.intro-status{
+ margin-top:8px;color:#788595;font-size:11px;letter-spacing:2px;
+ opacity:0;animation:fadeUp .7s 1s forwards;
+}
+.intro-status:after{content:"INITIALIZING TOOLS...";animation:status 2.5s 1s forwards}
+
+/* ================= NAV ================= */
+.nav{
+ position:fixed;top:0;left:0;width:100%;z-index:1000;
+ padding:13px 22px;background:rgba(5,8,12,.5);backdrop-filter:blur(18px);
+ border-bottom:1px solid transparent;transition:.3s;
+}
+.nav.scrolled{background:rgba(5,8,12,.9);border-color:var(--line)}
+.nav-inner{max-width:1280px;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;font-weight:950}
+.logo img{width:45px;height:45px;object-fit:cover;border-radius:11px;border:1px solid rgba(255,197,43,.3)}
+.logo small{display:block;color:var(--gold);font-size:8px;letter-spacing:2px}
+.logo strong{font-size:14px}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-size:13px;font-weight:800;color:#dbe2eb}
+.nav-links a:hover{color:var(--gold)}
+.wa-nav{background:var(--green);color:#fff!important;padding:11px 15px;border-radius:10px;box-shadow:0 7px 25px rgba(37,211,102,.18)}
+.menu{display:none;background:none;border:0;color:#fff;font-size:28px}
+
+/* ================= HERO ================= */
+.hero{min-height:100vh;position:relative;overflow:hidden;display:grid;place-items:center}
+.hero-grid{
+ position:absolute;inset:0;opacity:.13;
+ background-image:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+ background-size:55px 55px;mask-image:linear-gradient(#000,transparent);
+}
+.hero:before{
+ content:"";position:absolute;width:600px;height:600px;right:-160px;top:5%;
+ background:radial-gradient(circle,rgba(255,197,43,.16),transparent 68%);
+ animation:pulseGlow 4s infinite alternate;
+}
+.hero-inner{
+ width:min(1280px,100%);padding:150px 24px 90px;display:grid;
+ grid-template-columns:1.05fr .95fr;gap:30px;align-items:center;position:relative;z-index:2;
+}
+.eyebrow{color:var(--gold);font-size:11px;font-weight:950;letter-spacing:3px;text-transform:uppercase}
+.eyebrow:before{content:"";display:inline-block;width:27px;height:2px;background:var(--gold);vertical-align:middle;margin-right:9px}
+h1{font-size:clamp(48px,7vw,88px);line-height:.91;letter-spacing:-5px;margin-top:18px}
+h1 span{color:var(--gold);text-shadow:0 0 40px rgba(255,197,43,.18)}
+.lead{color:var(--muted);max-width:650px;font-size:17px;line-height:1.8;margin-top:25px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.btn{padding:14px 20px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:900;border:1px solid var(--line);transition:.3s}
+.btn:hover{transform:translateY(-3px)}
+.primary{background:linear-gradient(135deg,var(--gold),var(--orange));color:#080a0d;border:0;box-shadow:0 15px 40px rgba(255,160,25,.2)}
+.dark{background:rgba(255,255,255,.035)}
+.hero-points{display:flex;gap:18px;flex-wrap:wrap;margin-top:25px;color:#d2dbe5;font-size:12px}
+.hero-points b{color:var(--gold)}
+.hero-art{height:530px;position:relative;display:grid;place-items:center}
+.ring{position:absolute;width:430px;height:430px;border:1px solid rgba(255,197,43,.18);border-radius:50%;animation:spin 18s linear infinite}
+.ring:before{content:"";position:absolute;top:5%;left:15%;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 20px var(--gold)}
+.ring2{width:330px;height:330px;border-color:rgba(32,217,255,.14);animation-direction:reverse;animation-duration:13s}
+.hero-tool{position:relative;width:420px;height:300px;animation:floatTool 4s ease-in-out infinite;filter:drop-shadow(0 35px 35px #000)}
+.wrench{
+ position:absolute;width:340px;height:62px;left:50px;top:120px;border-radius:40px;
+ background:linear-gradient(#f8fafc,#a9b2ba 40%,#68747f 55%,#e6ebef 80%,#7a8690);
+ transform:rotate(-28deg)
+}
+.wrench:before{content:"";position:absolute;left:-45px;top:-48px;width:130px;height:130px;border:32px solid #b8c1c8;border-right-color:transparent;border-radius:50%}
+.wrench:after{content:"";position:absolute;right:-23px;top:-20px;width:105px;height:105px;border-radius:50%;background:radial-gradient(circle,#1b232c 0 25%,#b8c1c8 27% 39%,#697580 42%);box-shadow:inset 0 0 14px #303a44}
+.nut{position:absolute;z-index:2;width:105px;height:105px;left:175px;top:86px;background:linear-gradient(145deg,#e4e9ec,#707c87);clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);animation:spin 7s linear infinite}
+.nut:after{content:"";position:absolute;inset:23px;background:#080c12;clip-path:inherit}
+.visual-label{position:absolute;right:0;bottom:30px;padding:13px 16px;background:rgba(7,12,18,.78);border:1px solid var(--line);border-radius:12px;color:#dbe3ec;font-size:11px;backdrop-filter:blur(12px)}
+
+/* ================= TICKER / SECTIONS ================= */
+.ticker{overflow:hidden;background:#0a1017;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.track{display:flex;width:max-content;animation:ticker 25s linear infinite}
+.track span{padding:17px 26px;font-size:11px;font-weight:950;letter-spacing:2px;color:#d8e0e9}
+.track b{color:var(--gold);margin-right:8px}
+.section{width:min(1280px,100%);margin:auto;padding:100px 24px}
+.head{text-align:center;max-width:750px;margin:0 auto 48px}
+.head h2{font-size:clamp(36px,5vw,58px);letter-spacing:-3px;margin-top:13px}
+.head p{color:var(--muted);line-height:1.75;margin-top:14px}
+
+/* ================= PRODUCTS ================= */
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:17px}
+.card{background:linear-gradient(145deg,#111b26,#0b1119);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.4s}
+.card:hover{transform:translateY(-9px);border-color:rgba(255,197,43,.45);box-shadow:0 25px 60px rgba(0,0,0,.35)}
+.card-img{height:225px;overflow:hidden;background:#080c11}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:.6s}
+.card:hover img{transform:scale(1.08)}
+.card-body{padding:19px}
+.card-num{color:var(--gold);font-size:9px;letter-spacing:2px;font-weight:950}
+.card h3{font-size:18px;margin:8px 0}
+.card p{color:var(--muted);font-size:13px;line-height:1.65}
+.card a{display:inline-block;color:var(--gold);font-size:12px;font-weight:950;margin-top:15px}
+
+/* ================= FEATURES ================= */
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.feature{padding:23px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:15px;transition:.3s}
+.feature:hover{transform:translateY(-5px);border-color:rgba(255,197,43,.35)}
+.feature i{font-style:normal;font-size:25px}.feature h3{font-size:15px;margin:10px 0 6px}.feature p{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ================= BRANDS ================= */
+.brands{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+.brand{min-height:125px;display:grid;place-items:center;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#111b27,#0b1119);font-size:21px;font-weight:950;letter-spacing:1px;transition:.3s}
+.brand:hover{color:var(--gold);border-color:rgba(255,197,43,.45);transform:scale(1.025)}
+
+/* ================= GALLERY ================= */
+.gallery{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:175px;gap:14px}
+.g{overflow:hidden;border:1px solid var(--line);border-radius:17px;cursor:zoom-in}
+.g:nth-child(1){grid-column:span 5;grid-row:span 2}.g:nth-child(2){grid-column:span 4;grid-row:span 2}
+.g:nth-child(3){grid-column:span 3}.g:nth-child(4){grid-column:span 3}.g:nth-child(5){grid-column:span 4}.g:nth-child(6){grid-column:span 5}
+.g img{width:100%;height:100%;object-fit:cover;transition:.6s}.g:hover img{transform:scale(1.08);filter:brightness(.72)}
+
+/* ================= ABOUT ================= */
+.about{display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;align-items:center}
+.owner{position:relative;border:1px solid var(--line);padding:9px;border-radius:23px;background:#0d141d;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.owner img{height:510px;width:100%;object-fit:cover;border-radius:16px}
+.owner-tag{position:absolute;right:25px;bottom:25px;background:rgba(6,10,15,.84);backdrop-filter:blur(14px);padding:14px 16px;border:1px solid var(--line);border-radius:12px}
+.owner-tag small{display:block;color:var(--gold);font-size:8px;letter-spacing:2px;font-weight:950}.owner-tag strong{display:block;font-size:13px;margin-top:4px}
+.about h2{font-size:clamp(38px,5vw,60px);letter-spacing:-3px;line-height:1}
+.about p{color:var(--muted);line-height:1.8;margin-top:18px}
+.checks{display:grid;gap:11px;margin-top:23px}.check{display:flex;gap:10px;align-items:center;font-size:13px;color:#dce4ec}.check b{color:var(--gold);font-size:18px}
+
+/* ================= CONTACT ================= */
+.contact{border:1px solid rgba(255,197,43,.18);border-radius:25px;padding:45px;background:radial-gradient(circle at 85% 10%,rgba(255,197,43,.14),transparent 28%),linear-gradient(145deg,#111b27,#0b1119);display:grid;grid-template-columns:1.1fr .9fr;gap:45px;box-shadow:0 30px 90px rgba(0,0,0,.35)}
+.contact h2{font-size:clamp(38px,5vw,60px);letter-spacing:-3px;line-height:.98;margin-top:12px}
+.contact>div>p{color:var(--muted);line-height:1.75;margin:18px 0 24px}
+.info{display:grid;gap:11px}.info div{padding:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);border-radius:12px}
+.info small{display:block;color:var(--gold);font-size:8px;letter-spacing:2px;font-weight:950;margin-bottom:5px}.info span{font-size:13px;color:#dce4ed}
+footer{border-top:1px solid var(--line);text-align:center;color:#7e8997;font-size:12px;padding:35px 20px 100px}footer strong{color:#fff}
+
+/* ================= FLOATING ACTIONS ================= */
+.float-wa{position:fixed;right:21px;bottom:21px;z-index:900;width:60px;height:60px;border-radius:50%;background:var(--green);display:grid;place-items:center;font-size:28px;box-shadow:0 12px 40px rgba(37,211,102,.32);animation:wa 2.2s infinite}
+.float-wa span{position:absolute;right:70px;white-space:nowrap;background:#101720;border:1px solid var(--line);padding:9px 12px;border-radius:9px;font-size:11px;font-weight:900;opacity:0;transform:translateX(8px);transition:.25s}.float-wa:hover span{opacity:1;transform:none}
+.mobile-actions{display:none}
+
+/* ================= LIGHTBOX + REVEAL ================= */
+.lightbox{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);display:none;place-items:center;padding:20px}
+.lightbox.show{display:grid}.lightbox img{max-width:95vw;max-height:88vh;border-radius:14px}.close{position:fixed;right:18px;top:18px;width:45px;height:45px;border-radius:50%;background:#111a23;color:#fff;border:1px solid var(--line);font-size:25px}
+.reveal{opacity:0;transform:translateY(35px);transition:.8s ease}.reveal.show{opacity:1;transform:none}
+
+/* ================= KEYFRAMES ================= */
+@keyframes lidOpen{to{transform:rotateX(-78deg) translateY(-8px)}}
+@keyframes drawer1{to{transform:translateY(-18px)}}
+@keyframes drawer2{to{transform:translateY(3px)}}
+@keyframes drawer3{to{transform:translateY(22px)}}
+@keyframes toolPop{to{transform:translate(-50%,-105px) scale(1);opacity:1}}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}from{transform:translateY(15px)}}
+@keyframes spark{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.7) translate(15px,-15px)}100%{opacity:0;transform:scale(.2) translate(30px,-25px)}}
+@keyframes gridMove{to{transform:perspective(500px) rotateX(62deg) translateY(20%)}}
+@keyframes status{0%{content:"INITIALIZING TOOLS..."}35%{content:"UNLOCKING TOOLBOX..."}70%{content:"CHECKING INVENTORY..."}100%{content:"WELCOME TO KUSHWAHA HARDWARE"}}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes floatTool{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-14px) rotate(1deg)}}
+@keyframes pulseGlow{from{transform:scale(.9);opacity:.6}to{transform:scale(1.1);opacity:1}}
+@keyframes ticker{to{transform:translateX(-50%)}}@keyframes wa{50%{box-shadow:0 12px 60px rgba(37,211,102,.6)}}
+
+/* ================= MOBILE ================= */
+@media(max-width:1000px){
+ .hero-inner{grid-template-columns:1fr}.hero-art{height:440px}.products{grid-template-columns:repeat(2,1fr)}
+ .features{grid-template-columns:repeat(2,1fr)}.brands{grid-template-columns:repeat(2,1fr)}
+ .about{grid-template-columns:1fr}.owner img{height:560px}
+}
+@media(max-width:760px){
+ .nav-links{display:none;position:absolute;left:10px;right:10px;top:70px;padding:15px;background:rgba(8,13,20,.97);border:1px solid var(--line);border-radius:14px;flex-direction:column;align-items:stretch}
+ .nav-links.active{display:flex}.nav-links a{padding:11px}.menu{display:block}.logo-text{display:none}
+ .hero-inner{padding:125px 18px 70px}.hero h1{letter-spacing:-3px}.lead{font-size:15px}
+ .hero-art{height:390px}.ring{width:330px;height:330px}.ring2{width:260px;height:260px}.hero-tool{transform:scale(.78)}
+ .products{grid-template-columns:1fr}.features{grid-template-columns:1fr}
+ .gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:145px;gap:8px}.g,.g:nth-child(n){grid-column:span 1;grid-row:span 1}.g:nth-child(1){grid-column:span 2;grid-row:span 2}
+ .contact{grid-template-columns:1fr;padding:28px}.owner img{height:450px}.float-wa{display:none}
+ .mobile-actions{display:grid;position:fixed;bottom:9px;left:9px;right:9px;z-index:899;grid-template-columns:1fr 1fr;gap:8px;padding:7px;background:rgba(7,11,16,.92);backdrop-filter:blur(15px);border:1px solid var(--line);border-radius:15px}
+ .mobile-actions a{text-align:center;padding:12px;border-radius:9px;font-size:12px;font-weight:950}.mobile-actions a:first-child{background:var(--green)}.mobile-actions a:last-child{background:linear-gradient(135deg,var(--gold),var(--orange));color:#080a0d}
+ footer{padding-bottom:90px}
+}
+@media(max-width:520px){
+ .section{padding:75px 17px}.hero h1{font-size:51px}.actions .btn{width:100%}
+ .brand{min-height:105px;font-size:17px}.owner img{height:390px}.toolbox-scene{height:315px}
+ .toolbox{transform:translate(-50%,-50%) scale(.82)}.tool-pop{transform:translate(-50%,40px) scale(.4)}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+
+/* ================= BILINGUAL SWITCH ================= */
+.lang-switch{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:4px;
+  margin-left:8px;
+  border:1px solid rgba(245,183,44,.28);
+  background:rgba(255,255,255,.045);
+  border-radius:999px;
+  box-shadow:0 8px 25px rgba(0,0,0,.18);
+}
+.lang-switch button{
+  border:0;
+  background:transparent;
+  color:#cbd5e1;
+  padding:7px 10px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:12px;
+  cursor:pointer;
+  transition:.25s;
+}
+.lang-switch button.active{
+  color:#07111f;
+  background:linear-gradient(135deg,#f5b72c,#ff7a00);
+}
+@media(max-width:900px){
+  .lang-switch{margin:8px 0 0}
+  .nav-links.active .lang-switch{display:flex}
+}
+
+</style>
+</head>
+
+<body class="loading">
+
+<!-- ================= PREMIUM OPENING ================= -->
+<div class="intro" id="intro">
+ <div class="intro-bg"></div>
+ <div class="intro-grid"></div>
+ <div class="intro-content">
+   <div class="intro-brand">KUSHWAHA <span>HARDWARE</span></div>
+   <div class="intro-sub">TOOLS • HARDWARE • WORKSHOP SUPPLIES</div>
+
+   <div class="toolbox-scene">
+     <div class="toolbox">
+       <div class="box-lid"></div>
+       <div class="box-handle"></div>
+       <div class="box-body">
+         <div class="drawer d1"><div class="handle"></div></div>
+         <div class="drawer d2"><div class="handle"></div></div>
+         <div class="drawer d3"><div class="handle"></div></div>
+         <div class="box-front">KUSHWAHA TOOLS</div>
+       </div>
+     </div>
+
+     <div class="tool-pop"><div class="pop-wrench"></div></div>
+     <i class="spark sp1"></i><i class="spark sp2"></i>
+     <i class="spark sp3"></i><i class="spark sp4"></i>
+   </div>
+
+   <div class="intro-status"></div>
+ </div>
+</div>
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+ <div class="nav-inner">
+  <a class="logo" href="#home">
+   <img src="Shop-item.jpg" alt="Kushwaha Hardware">
+   <span class="logo-text"><small>QUALITY • TRUST • SERVICE</small><strong>KUSHWAHA HARDWARE</strong></span>
+  </a>
+  <nav class="nav-links" id="navLinks">
+   <a href="#home">Home</a><a href="#products">Products</a><a href="#gallery">Gallery</a>
+   <a href="#about">About</a><a href="#contact">Contact</a>
+   <a class="wa-nav" target="_blank" rel="noopener" href="https://wa.me/919621594271?text=Hello%20Kushwaha%20Hardware%2C%20I%20want%20to%20enquire%20about%20your%20tools.">💬 WhatsApp</a>
+   <div class="lang-switch" aria-label="Language">
+    <button type="button" id="enBtn" class="active">EN</button>
+    <button type="button" id="hiBtn">हिंदी</button>
+   </div>
+  </nav>
+  <button class="menu" id="menu">☰</button>
+ </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+ <div class="hero-grid"></div>
+ <div class="hero-inner">
+  <div class="reveal">
+   <div class="eyebrow">Kaptanganj • Kushinagar • Uttar Pradesh</div>
+   <h1>The right tool.<br><span>The right job.</span></h1>
+   <p class="lead">Welcome to <strong>Kushwaha Hardware & Tools Service</strong> — your local destination for quality hand tools, hardware, workshop accessories and everyday utility products.</p>
+   <div class="actions">
+    <a class="btn primary" href="#products">⚒ Explore Products</a>
+    <a class="btn dark" target="_blank" rel="noopener" href="https://wa.me/919621594271?text=Hello%20Kushwaha%20Hardware%2C%20I%20need%20help%20choosing%20a%20tool.">💬 Chat on WhatsApp</a>
+   </div>
+   <div class="hero-points"><span><b>✓</b> Branded Tools</span><span><b>✓</b> Practical Prices</span><span><b>✓</b> Local Service</span></div>
+  </div>
+
+  <div class="hero-art reveal">
+   <div class="ring"></div><div class="ring ring2"></div>
+   <div class="hero-tool"><div class="wrench"></div><div class="nut"></div></div>
+   <div class="visual-label">⚙ PRECISION • STRENGTH • RELIABILITY</div>
+  </div>
+ </div>
+</section>
+
+<div class="ticker"><div class="track">
+ <span><b>⚒</b> HAND TOOLS</span><span><b>⚙</b> WORKSHOP TOOLS</span><span><b>★</b> TAPARIA</span><span><b>✓</b> QUALITY HARDWARE</span><span><b>↗</b> WHATSAPP ENQUIRY</span>
+ <span><b>⚒</b> HAND TOOLS</span><span><b>⚙</b> WORKSHOP TOOLS</span><span><b>★</b> TAPARIA</span><span><b>✓</b> QUALITY HARDWARE</span><span><b>↗</b> WHATSAPP ENQUIRY</span>
+</div></div>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="section" id="products">
+ <div class="head reveal"><div class="eyebrow">What we stock</div><h2>Tools for every job.</h2><p>Explore our main product categories and message us directly for current availability and prices.</p></div>
+ <div class="products">
+
+  <article class="card reveal"><div class="card-img"><img src="Shop-item.jpg" alt="Hand tools"></div><div class="card-body">
+   <div class="card-num">01 / HAND TOOLS</div><h3>Spanners & Hand Tools</h3><p>Spanners, pliers, screwdrivers, cutters, hammers and more.</p>
+   <a target="_blank" href="https://wa.me/919621594271?text=Hello%2C%20please%20share%20available%20hand%20tools%20and%20prices.">Ask on WhatsApp →</a>
+  </div></article>
+
+  <article class="card reveal"><div class="card-img"><img src="Shop-item2.jpg" alt="Hardware supplies"></div><div class="card-body">
+   <div class="card-num">02 / HARDWARE</div><h3>Hardware Supplies</h3><p>Useful hardware products for repair, maintenance and everyday work.</p>
+   <a target="_blank" href="https://wa.me/919621594271?text=Hello%2C%20please%20share%20available%20hardware%20items%20and%20prices.">Ask on WhatsApp →</a>
+  </div></article>
+
+  <article class="card reveal"><div class="card-img"><img src="Socket-set.jpg.png" alt="Socket set"></div><div class="card-body">
+   <div class="card-num">03 / WORKSHOP</div><h3>Socket Sets</h3><p>Socket sets, ratchets and workshop accessories for practical jobs.</p>
+   <a target="_blank" href="https://wa.me/919621594271?text=Hello%2C%20I%20want%20to%20know%20about%20socket%20sets%20and%20prices.">Ask on WhatsApp →</a>
+  </div></article>
+
+  <article class="card reveal"><div class="card-img"><img src="Hand-tool.jpg" alt="Professional tools"></div><div class="card-body">
+   <div class="card-num">04 / PROFESSIONAL</div><h3>Workshop Essentials</h3><p>Practical tools and accessories for mechanics, workshops and home use.</p>
+   <a target="_blank" href="https://wa.me/919621594271?text=Hello%2C%20I%20want%20to%20know%20about%20professional%20tools.">Ask on WhatsApp →</a>
+  </div></article>
+
+ </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="section" style="padding-top:0">
+ <div class="features">
+  <div class="feature reveal"><i>✓</i><h3>Quality Focus</h3><p>Useful products selected for everyday repair and workshop requirements.</p></div>
+  <div class="feature reveal"><i>⚡</i><h3>Fast Enquiry</h3><p>Ask about availability, sizes and prices directly on WhatsApp.</p></div>
+  <div class="feature reveal"><i>⚙</i><h3>Wide Range</h3><p>Hand tools, sockets, hardware and workshop accessories.</p></div>
+  <div class="feature reveal"><i>📍</i><h3>Local Store</h3><p>Serving Kaptanganj and surrounding customers.</p></div>
+ </div>
+</section>
+
+<!-- ================= BRANDS ================= -->
+<section class="section">
+ <div class="head reveal"><div class="eyebrow">Brands</div><h2>Trusted ranges.</h2><p>Ask us for current stock, sizes and prices.</p></div>
+ <div class="brands">
+  <div class="brand reveal">TAPARIA</div><div class="brand reveal">AMBIKA</div><div class="brand reveal">JHALANI</div><div class="brand reveal">BANSAL</div>
+ </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section class="section" id="gallery">
+ <div class="head reveal"><div class="eyebrow">Real products</div><h2>Inside the store.</h2><p>Tap an image to view it full screen.</p></div>
+ <div class="gallery">
+  <div class="g reveal"><img src="shop-items.jpg.png" alt="Hardware shop display"></div>
+  <div class="g reveal"><img src="Shop-item.jpg" alt="Shop hardware"></div>
+  <div class="g reveal"><img src="Shop-item2.jpg" alt="Hardware products"></div>
+  <div class="g reveal"><img src="Shop-item3.jpg" alt="Hardware collection"></div>
+  <div class="g reveal"><img src="Socket-set.jpg.png" alt="Socket set"></div>
+  <div class="g reveal"><img src="Hand-tool.jpg" alt="Hand tools"></div>
+ </div>
+</section>
+
+<!-- ================= ABOUT / OWNER ================= -->
+<section class="section" id="about">
+ <div class="about">
+  <div class="owner reveal">
+   <img src="IMG_20200602_074955.jpg" alt="Owner of Kushwaha Hardware & Tools Service">
+   <div class="owner-tag"><small>OWNER • KUSHWAHA HARDWARE</small><strong>Trust • Service • Quality</strong></div>
+  </div>
+  <div class="reveal">
+   <div class="eyebrow">About the store</div>
+   <h2>A local shop with a professional standard.</h2>
+   <p>Kushwaha Hardware & Tools Service is a local hardware and tools store serving Kaptanganj and surrounding areas.</p>
+   <p>Need a particular size, tool or price? Send a WhatsApp message before visiting to check availability.</p>
+   <div class="checks">
+    <div class="check"><b>✓</b><span>Wide range of hardware and hand tools</span></div>
+    <div class="check"><b>✓</b><span>Branded products and workshop essentials</span></div>
+    <div class="check"><b>✓</b><span>Direct WhatsApp enquiry</span></div>
+    <div class="check"><b>✓</b><span>Customer-focused local service</span></div>
+   </div>
+   <div class="actions">
+    <a class="btn primary" target="_blank" href="https://wa.me/919621594271?text=Hello%20Kushwaha%20Hardware%2C%20I%20would%20like%20to%20enquire%20about%20your%20products.">💬 Message Owner</a>
+    <a class="btn dark" href="tel:+919621594271">☎ Call Now</a>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="contact">
+ <div class="contact reveal">
+  <div>
+   <div class="eyebrow">Contact & visit</div>
+   <h2>Need a tool?<br>Let's find it.</h2>
+   <p>For availability, sizes, prices or bulk requirements, contact us directly. WhatsApp opens with a ready-made message.</p>
+   <div class="actions">
+    <a class="btn primary" target="_blank" href="https://wa.me/919621594271?text=Hello%20Kushwaha%20Hardware%2C%20I%20want%20to%20enquire%20about%20a%20product.">💬 WhatsApp Us</a>
+    <a class="btn dark" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Kushwaha+Hardware+and+Tools+Service+Kaptanganj+Uttar+Pradesh">📍 Directions</a>
+    <a class="btn dark" href="tel:+919621594271">☎ Call</a>
+   </div>
+  </div>
+  <div class="info">
+   <div><small>STORE</small><span>Kushwaha Hardware & Tools Service</span></div>
+   <div><small>ADDRESS</small><span>Ramkola Road, Kaptanganj, Uttar Pradesh 274301</span></div>
+   <div><small>WHATSAPP / PHONE</small><span>+91 9621594271</span></div>
+   <div><small>ALTERNATE PHONE</small><span>+91 6350638018</span></div>
+   <div><small>HOURS</small><span>Open • Closes 21:00</span></div>
+  </div>
+ </div>
+</section>
+
+<footer>© 2026 <strong>Kushwaha Hardware & Tools Service</strong> • Kaptanganj, Uttar Pradesh</footer>
+
+<a class="float-wa" target="_blank" href="https://wa.me/919621594271?text=Hello%20Kushwaha%20Hardware%2C%20I%20am%20interested%20in%20your%20tools.">💬<span>Chat on WhatsApp</span></a>
+
+<div class="mobile-actions">
+ <a target="_blank" href="https://wa.me/919621594271?text=Hello%20Kushwaha%20Hardware%2C%20I%20want%20to%20enquire%20about%20your%20products.">💬 WhatsApp</a>
+ <a href="tel:+919621594271">☎ Call Now</a>
+</div>
+
+<div class="lightbox" id="lightbox">
+ <button class="close" id="close">×</button><img id="bigImage" alt="Gallery image">
+</div>
+
+<script>
+/* TOOLBOX INTRO */
+window.addEventListener("load",()=>{
+ setTimeout(()=>{
+  document.getElementById("intro").classList.add("done");
+  document.body.classList.remove("loading");
+ },5200);
+});
+
+/* NAV */
+const nav=document.getElementById("nav");
+const menu=document.getElementById("menu");
+const navLinks=document.getElementById("navLinks");
+window.addEventListener("scroll",()=>nav.classList.toggle("scrolled",scrollY>20));
+menu.addEventListener("click",()=>navLinks.classList.toggle("active"));
+document.querySelectorAll(".nav-links a").forEach(a=>a.addEventListener("click",()=>navLinks.classList.remove("active")));
+
+/* REVEAL */
+const ro=new IntersectionObserver(entries=>{
+ entries.forEach((e,i)=>{
+  if(e.isIntersecting){
+   e.target.style.transitionDelay=Math.min(i*35,180)+"ms";
+   e.target.classList.add("show");ro.unobserve(e.target);
+  }
+ });
+},{threshold:.1});
+document.querySelectorAll(".reveal").forEach(e=>ro.observe(e));
+
+/* PRODUCT TILT */
+if(matchMedia("(pointer:fine)").matches){
+ document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("mousemove",e=>{
+   const r=card.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+   card.style.transform=`perspective(900px) rotateX(${(y/r.height-.5)*-5}deg) rotateY(${(x/r.width-.5)*5}deg) translateY(-9px)`;
+  });
+  card.addEventListener("mouseleave",()=>card.style.transform="");
+ });
+}
+
+/* GALLERY */
+const lb=document.getElementById("lightbox"),bi=document.getElementById("bigImage");
+document.querySelectorAll(".g img").forEach(img=>img.addEventListener("click",()=>{bi.src=img.src;lb.classList.add("show")}));
+function closeBox(){lb.classList.remove("show");bi.src=""}
+document.getElementById("close").onclick=closeBox;
+lb.addEventListener("click",e=>{if(e.target===lb)closeBox()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeBox()});
+
+/* ================= BILINGUAL ENGLISH / HINDI ================= */
+const translations = {
+  hi: {
+    ".logo-text small":"गुणवत्ता • भरोसा • सेवा",
+    ".logo-text strong":"कुशवाहा हार्डवेयर",
+    ".nav-links a:nth-child(1)":"होम",
+    ".nav-links a:nth-child(2)":"प्रोडक्ट्स",
+    ".nav-links a:nth-child(3)":"गैलरी",
+    ".nav-links a:nth-child(4)":"हमारे बारे में",
+    ".nav-links a:nth-child(5)":"संपर्क",
+    ".wa-nav":"💬 व्हाट्सऐप",
+
+    ".intro-sub":"टूल्स • हार्डवेयर • वर्कशॉप सामान",
+    ".eyebrow":"कप्तानगंज • कुशीनगर • उत्तर प्रदेश",
+
+    ".hero h1":"सही टूल।\nसही काम।",
+    ".lead":"कुशवाहा हार्डवेयर एंड टूल्स सर्विस में आपका स्वागत है — गुणवत्तापूर्ण हैंड टूल्स, हार्डवेयर, वर्कशॉप एक्सेसरीज़ और रोज़मर्रा के उपयोगी सामान के लिए आपका स्थानीय स्टोर।",
+    ".actions .primary":"⚒ प्रोडक्ट्स देखें",
+    ".actions .dark":"💬 व्हाट्सऐप पर चैट करें",
+
+    ".hero-points span:nth-child(1)":"✓ ब्रांडेड टूल्स",
+    ".hero-points span:nth-child(2)":"✓ उचित कीमतें",
+    ".hero-points span:nth-child(3)":"✓ स्थानीय सेवा",
+    ".visual-label":"⚙ सटीकता • मजबूती • भरोसा",
+
+    ".head:nth-of-type(1) h2":"हर काम के लिए टूल्स",
+    ".head:nth-of-type(1) p":"हमारी मुख्य प्रोडक्ट कैटेगरी देखें और उपलब्धता व कीमत के लिए सीधे हमें मैसेज करें।",
+
+    ".card:nth-child(1) .card-num":"01 / हैंड टूल्स",
+    ".card:nth-child(1) h3":"स्पैनर और हैंड टूल्स",
+    ".card:nth-child(1) p":"स्पैनर, प्लायर, स्क्रूड्राइवर, कटर, हथौड़े और अन्य टूल्स।",
+    ".card:nth-child(1) a":"व्हाट्सऐप पर पूछें →",
+
+    ".card:nth-child(2) .card-num":"02 / हार्डवेयर",
+    ".card:nth-child(2) h3":"हार्डवेयर सामान",
+    ".card:nth-child(2) p":"रिपेयर, मेंटेनेंस और रोज़मर्रा के काम के लिए उपयोगी हार्डवेयर सामान।",
+    ".card:nth-child(2) a":"व्हाट्सऐप पर पूछें →",
+
+    ".card:nth-child(3) .card-num":"03 / वर्कशॉप",
+    ".card:nth-child(3) h3":"सॉकेट सेट",
+    ".card:nth-child(3) p":"काम के लिए सॉकेट सेट, रैचेट और वर्कशॉप एक्सेसरीज़।",
+    ".card:nth-child(3) a":"व्हाट्सऐप पर पूछें →",
+
+    ".card:nth-child(4) .card-num":"04 / प्रोफेशनल",
+    ".card:nth-child(4) h3":"वर्कशॉप जरूरी सामान",
+    ".card:nth-child(4) p":"मैकेनिक, वर्कशॉप और घर के उपयोग के लिए उपयोगी टूल्स व एक्सेसरीज़।",
+    ".card:nth-child(4) a":"व्हाट्सऐप पर पूछें →",
+
+    ".feature:nth-child(1) h3":"गुणवत्ता पर ध्यान",
+    ".feature:nth-child(1) p":"रिपेयर और वर्कशॉप की रोज़मर्रा की जरूरतों के लिए उपयोगी प्रोडक्ट्स।",
+    ".feature:nth-child(2) h3":"तेज़ पूछताछ",
+    ".feature:nth-child(2) p":"उपलब्धता, साइज और कीमत के बारे में सीधे व्हाट्सऐप पर पूछें।",
+    ".feature:nth-child(3) h3":"बड़ी रेंज",
+    ".feature:nth-child(3) p":"हैंड टूल्स, सॉकेट्स, हार्डवेयर और वर्कशॉप एक्सेसरीज़।",
+    ".feature:nth-child(4) h3":"स्थानीय स्टोर",
+    ".feature:nth-child(4) p":"कप्तानगंज और आसपास के ग्राहकों की सेवा।",
+
+    ".brands + *":"",
+
+    "#about .eyebrow":"हमारे बारे में",
+    "#about h2":"स्थानीय दुकान, प्रोफेशनल गुणवत्ता के साथ।",
+    "#about p:nth-of-type(1)":"कुशवाहा हार्डवेयर एंड टूल्स सर्विस कप्तानगंज और आसपास के क्षेत्रों में हार्डवेयर और टूल्स की स्थानीय दुकान है।",
+    "#about p:nth-of-type(2)":"किसी खास साइज, टूल या कीमत की जरूरत है? आने से पहले उपलब्धता जांचने के लिए हमें व्हाट्सऐप करें।",
+    "#about .check:nth-child(1) span":"हार्डवेयर और हैंड टूल्स की विस्तृत रेंज",
+    "#about .check:nth-child(2) span":"ब्रांडेड प्रोडक्ट्स और वर्कशॉप जरूरी सामान",
+    "#about .check:nth-child(3) span":"सीधी व्हाट्सऐप पूछताछ",
+    "#about .check:nth-child(4) span":"ग्राहक-केंद्रित स्थानीय सेवा",
+    "#about .actions .primary":"💬 मालिक को मैसेज करें",
+    "#about .actions .dark":"☎ अभी कॉल करें",
+
+    "#contact .eyebrow":"संपर्क और विज़िट",
+    "#contact h2":"टूल चाहिए?\nआइए ढूंढते हैं।",
+    "#contact p":"उपलब्धता, साइज, कीमत या थोक जरूरतों के लिए सीधे संपर्क करें। व्हाट्सऐप तैयार मैसेज के साथ खुलेगा।",
+    "#contact .actions .primary":"💬 व्हाट्सऐप करें",
+    "#contact .actions .dark:nth-child(2)":"📍 रास्ता देखें",
+    "#contact .actions .dark:nth-child(3)":"☎ कॉल करें",
+    "#contact .info div:nth-child(1) small":"दुकान",
+    "#contact .info div:nth-child(1) span":"कुशवाहा हार्डवेयर एंड टूल्स सर्विस",
+    "#contact .info div:nth-child(2) small":"पता",
+    "#contact .info div:nth-child(3) small":"व्हाट्सऐप / फोन",
+    "#contact .info div:nth-child(4) small":"वैकल्पिक फोन",
+    "#contact .info div:nth-child(5) small":"समय",
+    "#contact .info div:nth-child(5) span":"खुला • रात 9:00 बजे बंद",
+
+    ".float-wa span":"व्हाट्सऐप चैट",
+    ".mobile-actions a:nth-child(1)":"💬 व्हाट्सऐप",
+    ".mobile-actions a:nth-child(2)":"☎ अभी कॉल करें"
+  }
+};
+
+const originalText = new Map();
+
+function rememberText(selector){
+  document.querySelectorAll(selector).forEach(el=>{
+    if(!originalText.has(el)) originalText.set(el, el.textContent);
+  });
+}
+
+Object.keys(translations.hi).forEach(rememberText);
+
+function setHindi(){
+  Object.entries(translations.hi).forEach(([selector,text])=>{
+    document.querySelectorAll(selector).forEach(el=>el.textContent=text);
+  });
+  document.documentElement.lang="hi";
+  document.getElementById("hiBtn")?.classList.add("active");
+  document.getElementById("enBtn")?.classList.remove("active");
+  localStorage.setItem("kh-lang","hi");
+}
+
+function setEnglish(){
+  originalText.forEach((text,el)=>el.textContent=text);
+  document.documentElement.lang="en";
+  document.getElementById("enBtn")?.classList.add("active");
+  document.getElementById("hiBtn")?.classList.remove("active");
+  localStorage.setItem("kh-lang","en");
+}
+
+document.getElementById("hiBtn")?.addEventListener("click",setHindi);
+document.getElementById("enBtn")?.addEventListener("click",setEnglish);
+
+if(localStorage.getItem("kh-lang")==="hi") setHindi();
+
+/* Section-specific Hindi labels that share the .eyebrow class */
+const eyebrowHI = {
+  "#products .eyebrow":"हमारे प्रोडक्ट्स",
+  "#gallery .eyebrow":"असली प्रोडक्ट्स",
+  "#about .eyebrow":"हमारे बारे में",
+  "#contact .eyebrow":"संपर्क और विज़िट"
+};
+const eyebrowEN = {
+  "#products .eyebrow":"What we stock",
+  "#gallery .eyebrow":"Real products",
+  "#about .eyebrow":"About the store",
+  "#contact .eyebrow":"Contact & visit"
+};
+function setEyebrows(lang){
+  const map=lang==="hi"?eyebrowHI:eyebrowEN;
+  Object.entries(map).forEach(([s,t])=>{
+    const e=document.querySelector(s); if(e)e.textContent=t;
+  });
+}
+document.getElementById("hiBtn")?.addEventListener("click",()=>setEyebrows("hi"));
+document.getElementById("enBtn")?.addEventListener("click",()=>setEyebrows("en"));
+if(localStorage.getItem("kh-lang")==="hi") setEyebrows("hi");
+
+</script>
+</body>
+</html>
